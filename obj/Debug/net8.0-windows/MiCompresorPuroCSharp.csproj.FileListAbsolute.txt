@@ -1,0 +1,14 @@
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\bin\Debug\net8.0-windows\MiCompresorPuroCSharp.exe
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\bin\Debug\net8.0-windows\MiCompresorPuroCSharp.deps.json
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\bin\Debug\net8.0-windows\MiCompresorPuroCSharp.runtimeconfig.json
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\bin\Debug\net8.0-windows\MiCompresorPuroCSharp.dll
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\bin\Debug\net8.0-windows\MiCompresorPuroCSharp.pdb
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\obj\Debug\net8.0-windows\MiCompresorPuroCSharp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\obj\Debug\net8.0-windows\MiCompresorPuroCSharp.AssemblyInfoInputs.cache
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\obj\Debug\net8.0-windows\MiCompresorPuroCSharp.AssemblyInfo.cs
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\obj\Debug\net8.0-windows\MiCompresorPuroCSharp.csproj.CoreCompileInputs.cache
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\obj\Debug\net8.0-windows\MiCompresorPuroCSharp.dll
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\obj\Debug\net8.0-windows\refint\MiCompresorPuroCSharp.dll
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\obj\Debug\net8.0-windows\MiCompresorPuroCSharp.pdb
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\obj\Debug\net8.0-windows\MiCompresorPuroCSharp.genruntimeconfig.cache
+C:\Users\jocondoric\Desktop\DesktopAppBackups\MiCompresorPuroCSharp\obj\Debug\net8.0-windows\ref\MiCompresorPuroCSharp.dll
