@@ -1,4 +1,4 @@
-﻿namespace MiCompresorPuroCSharp;
+﻿namespace BDPCompressEncrypt;
 
 public partial class Form1 // <-- Aquí falta agregar "public"
 {

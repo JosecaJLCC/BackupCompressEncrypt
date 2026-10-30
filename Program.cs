@@ -1,4 +1,4 @@
-namespace MiCompresorPuroCSharp;
+namespace BDPCompressEncrypt;
 
 static class Program
 {
