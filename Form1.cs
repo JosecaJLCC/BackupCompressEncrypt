@@ -9,7 +9,7 @@ using Microsoft.Data.SqlClient;
 
 namespace BDPCompressEncrypt
 {
-    public partial class Form1 : Form
+    public partial class NewAutomationWindow : Form
     {
         // ==========================================
         // VARIABLES GLOBALES (CONTROLES DE LA INTERFAZ)
@@ -37,7 +37,7 @@ namespace BDPCompressEncrypt
         private bool claveDescifradoVisible = false;
 
         // Constructor del formulario (Punto de entrada de la ventana)
-        public Form1()
+        public NewAutomationWindow()
         {
             // Llama a la función que dibuja toda la interfaz al abrir el programa
             ConfigurarInterfazGeneral();
@@ -63,10 +63,25 @@ namespace BDPCompressEncrypt
             // --> NUEVO: Divides el ancho total de la ventana (ClientRectangle) entre 2 pestañas
             tabControlPrincipal.ItemSize = new Size(this.ClientSize.Width / 2 - 2, 30);
 
-            // Crea las dos pestañas principales
-            TabPage tabCifrar = new TabPage("🔒 Cifrado y Automatizado");
-            TabPage tabDescifrar = new TabPage("🔓 Descifrado manual");
+            ImageList tabIcons = new ImageList();
+            tabIcons.ImageSize = new Size(20, 20);
 
+            try {
+                tabIcons.Images.Add(Image.FromFile("Encrypted.png"));    // Índice 0
+                tabIcons.Images.Add(Image.FromFile("EncryptedOff.png")); // Índice 1
+            } 
+            catch {
+                // Si falta la imagen, no hace colapsar la app
+                LoggearCifrado("Advertencia: No se encontraron los iconos para las pestañas.");
+            }
+            // Asignar el almacén de iconos al TabControl
+            tabControlPrincipal.ImageList = tabIcons;
+
+            // Crea las dos pestañas principales
+            TabPage tabCifrar = new TabPage("Cifrado y Automatizado");
+            tabCifrar.ImageIndex = 0;
+            TabPage tabDescifrar = new TabPage("Descifrado manual");
+            tabDescifrar.ImageIndex = 1;
             // Llama a los métodos que "dibujan" los controles dentro de cada pestaña
             ConstruirPestañaCifrado(tabCifrar);
             ConstruirPestañaDescifrado(tabDescifrar);
@@ -104,13 +119,13 @@ namespace BDPCompressEncrypt
             // NUEVO: Ruta Destino con selector de carpetas (Examinar)
             AgregarLabel(tab, "Ruta Destino de Respaldo:", 20, 125);
             // Ancho ajustado para dar espacio al botón Examinar
-            txtRouteDestination = new TextBox() { Location = new Point(20, 145), Width = 380, Text = @"C:\Backups" };
+            txtRouteDestination = new TextBox() { Location = new Point(20, 145), Width = 380, PlaceholderText = "Ruta de destino donde se guardará el backup" };
             btnExaminarDestino = new Button() { Text = "Examinar...", Location = new Point(410, 144), Size = new Size(85, 26) };
             btnExaminarDestino.Click += BtnExaminarDestino_Click;
 
             // Clave maestra AES-256
             AgregarLabel(tab, "Clave de cifrado AES-256:", 20, 175);
-            txtEncryptionKey = new TextBox() { Location = new Point(20, 195), Width = 470, PasswordChar = '•', Text = "" };
+            txtEncryptionKey = new TextBox() { Location = new Point(20, 195), Width = 470, PasswordChar = '•', PlaceholderText = "Clave de cifrado AES-256" };
             
             // INCORPORAR BOTÓN DENTRO de txtEncryptionKey
             btnShowEncryptionKey = CrearBotonOjo(txtEncryptionKey, btnShowEncryptionKey_Click);
@@ -145,9 +160,22 @@ namespace BDPCompressEncrypt
         // ==========================================
         private void BtnExaminarDestino_Click(object sender, EventArgs e)
         {
-            // Abre una ventana nativa de Windows para elegir carpetas
             using (FolderBrowserDialog fbd = new FolderBrowserDialog())
             {
+                fbd.Description = "Seleccione la carpeta de destino para los backups";
+                fbd.UseDescriptionForTitle = true;
+
+                // Si la ruta escrita en la caja existe, abre el buscador allí
+                if (!string.IsNullOrWhiteSpace(txtRouteDestination.Text) && Directory.Exists(txtRouteDestination.Text))
+                {
+                    fbd.SelectedPath = txtRouteDestination.Text;
+                }
+                else
+                {
+                    // Forzar a que la ventana muestre todos los discos de la computadora
+                    fbd.RootFolder = Environment.SpecialFolder.MyComputer; 
+                }
+
                 if (fbd.ShowDialog() == DialogResult.OK)
                 {
                     txtRouteDestination.Text = fbd.SelectedPath;
@@ -261,6 +289,18 @@ namespace BDPCompressEncrypt
         {
             using (FolderBrowserDialog fbd = new FolderBrowserDialog())
             {
+                fbd.Description = "Seleccione la carpeta para guardar los archivos descifrados";
+                fbd.UseDescriptionForTitle = true;
+
+                if (!string.IsNullOrWhiteSpace(txtRutaSalidaDescifrado.Text) && Directory.Exists(txtRutaSalidaDescifrado.Text))
+                {
+                    fbd.SelectedPath = txtRutaSalidaDescifrado.Text;
+                }
+                else
+                {
+                    fbd.RootFolder = Environment.SpecialFolder.MyComputer;
+                }
+
                 if (fbd.ShowDialog() == DialogResult.OK)
                 {
                     txtRutaSalidaDescifrado.Text = fbd.SelectedPath;
@@ -436,7 +476,7 @@ namespace BDPCompressEncrypt
             automatizacionActiva = !automatizacionActiva;
             if (automatizacionActiva)
             {
-                btnSaveConfig.Text = "⏹ DETENER MODO AUTOMÁTICO";
+                btnSaveConfig.Text = "DETENER ";
                 btnSaveConfig.BackColor = Color.DarkRed;
                 txtEncryptionKey.Enabled = false;
                 txtPassword.Enabled = false;
@@ -449,7 +489,7 @@ namespace BDPCompressEncrypt
             else
             {
                 relojInterno.Stop();
-                btnSaveConfig.Text = "▶ ACTIVAR MODO AUTOMÁTICO";
+                btnSaveConfig.Text = "INICIAR";
                 btnSaveConfig.BackColor = Color.DarkSlateBlue;
                 txtEncryptionKey.Enabled = true;
                 txtPassword.Enabled = true;

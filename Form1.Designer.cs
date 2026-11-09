@@ -1,6 +1,6 @@
 ﻿namespace BDPCompressEncrypt;
 
-public partial class Form1 // <-- Aquí falta agregar "public"
+public partial class NewAutomationWindow // <-- Aquí falta agregar "public"
 {
     /// <summary>
     ///  Required designer variable.
