@@ -1,16 +1,23 @@
-namespace BDPCompressEncrypt;
+using System;
+using System.Windows.Forms;
 
-static class Program
+namespace BDPCompressEncrypt
 {
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
-    [STAThread]
-    static void Main()
+    internal static class Program
     {
-        // To customize application configuration such as set high DPI settings or default font,
-        // see https://aka.ms/applicationconfiguration.
-        ApplicationConfiguration.Initialize();
-        Application.Run(new DashboardForm());
-    }    
+        [STAThread]
+        static void Main()
+        {
+            try
+            {
+                ApplicationConfiguration.Initialize();
+                Application.Run(new DashboardForm());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR REAL: " + ex.ToString());
+                MessageBox.Show(ex.ToString(), "Error al iniciar");
+            }
+        }
+    }
 }

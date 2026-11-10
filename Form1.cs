@@ -555,11 +555,11 @@ namespace BDPCompressEncrypt
                 LoggearCifrado("Paso 3: Cifrando con AES-256 y PBKDF2...");
                 CifrarArchivoFisico(archivoZip, archivoEnc, txtEncryptionKey.Text);
 
-                LoggearCifrado("Paso 4: Limpiando temporales en claro...");
+                LoggearCifrado("Paso 4: Eliminando archivos Backup y Zip");
                 if (File.Exists(archivoBak)) File.Delete(archivoBak); 
                 if (File.Exists(archivoZip)) File.Delete(archivoZip); 
 
-                LoggearCifrado("✅ ¡Respaldo completado y asegurado con éxito!");
+                LoggearCifrado("Fin: ¡Respaldo completado y asegurado con éxito!");
             }
             catch (Exception ex)
             {

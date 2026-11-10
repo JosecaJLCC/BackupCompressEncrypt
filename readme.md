@@ -1,17 +1,25 @@
 ## Ejecutar el programa
 
+```sh
 & "C:\Program Files\dotnet\dotnet.exe" run
+```
 
 ## ingreso a mi base de datos local
+
+```sh
 sqlcmd -S localhost -E -C
+```
 
 ## creacion de mi base de datos y llenado de tabla y datos
+```sql
 CREATE DATABASE MORA_INTEGGRE;
 GO
+
 
 -- 1. Crear la base de datos
 CREATE DATABASE persona;
 GO
+
 
 -- 2. Entrar a la base de datos recién creada
 USE persona;
@@ -44,9 +52,17 @@ GO
 -- 5. Verificar que los datos se guardaron correctamente
 SELECT * FROM usuarios;
 GO
+```
 
 ## cifrar y descifrar backup 
 
 ## Importar a la base de datos
 
+```sh
 sqlcmd -S localhost -E -C -Q "RESTORE DATABASE [MORA_INTEGGRE20260801_21-00] FROM DISK='C:\Backup\MORA_INTEGGRE20260801_21-00_extraido\MORA_INTEGGRE20260801_21-00.bak' WITH REPLACE, MOVE 'MORA_INTEGGRE' TO 'C:\Backup\MORA_INTEGGRE.mdf', MOVE 'MORA_INTEGGRE_log' TO 'C:\Backup\MORA_INTEGGRE_log.ldf'"
+```
+## Pushear a mi repositorio
+
+```sh
+git -c http.sslVerify=false push origin main
+```
