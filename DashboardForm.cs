@@ -78,7 +78,7 @@ namespace BDPCompressEncrypt
 
         private void ConfigurarVentanaPrincipal()
         {
-            this.Text = "BDP Compress & Encrypt - v1.0";
+            this.Text = "Cifrado y Descifrado BDP";
             this.Size = new Size(560, 720);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -93,16 +93,18 @@ namespace BDPCompressEncrypt
             tabIcons.ImageSize = new Size(20, 20);
             try
             {
-                tabIcons.Images.Add(Image.FromFile("Encrypted.png"));    // Índice 0
-                tabIcons.Images.Add(Image.FromFile("EncryptedOff.png")); // Índice 1
+                tabIcons.Images.Add(Image.FromFile("Home.png")); // Índice 0
+                tabIcons.Images.Add(Image.FromFile("Encrypted.png"));    // Índice 1
+                tabIcons.Images.Add(Image.FromFile("EncryptedOff.png")); // Índice 2
+
             }
             catch { }
             tabControlPrincipal.ImageList = tabIcons;
 
             // Nombres de pestañas originales intactos
             tabDashboard = new TabPage("Panel de proceso") { ImageIndex = 0 };
-            tabCifrar = new TabPage("Cifrado y Automatizado") { ImageIndex = 0 };
-            tabDescifrar = new TabPage("Descifrado manual") { ImageIndex = 1 };
+            tabCifrar = new TabPage("Cifrado y Automatizado") { ImageIndex = 1 };
+            tabDescifrar = new TabPage("Descifrado manual") { ImageIndex = 2 };
 
             ConstruirPestañaDashboard(tabDashboard);
             ConstruirPestañaCifrado(tabCifrar);
@@ -197,18 +199,21 @@ namespace BDPCompressEncrypt
 
             txtBuscar = new TextBox() { 
                 PlaceholderText = "Buscar por Base de Datos", 
-                Width = 280, 
-                
-                Location = new Point(20, 20) 
+                Width = 280,
+                Location = new Point(20, 22), // Bajado 2px para alinear perfectamente con el texto del botón de al lado
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular), // Tipografía moderna, hace que la caja crezca sola a unos 25px de alto
+                BorderStyle = BorderStyle.FixedSingle, // Borde más limpio y plano, sin relieve antiguo de Windows
+                ForeColor = Color.FromArgb(14, 54, 90) // Color de texto azul corporativo cuando el usuario escribe 
             };
             txtBuscar.TextChanged += (s, e) => FiltrarTablaProcesos();
 
             btnNuevaAutomatizacion = new Button()
             {
-                Text = "Agregar Automatización", Width = 200, Height = 30, Location = new Point(320, 20),
+                Text = "Agregar Automatización", Width = 200, Height = 28, Location = new Point(320, 20),
                 BackColor = Color.FromArgb(14, 54, 90), 
                 ForeColor = Color.White, 
                 FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 8, FontStyle.Bold), // Estilo de fuente
                 Image = new Bitmap(Image.FromFile("AddIcon.png"), new Size(20, 20)),
                 ImageAlign = ContentAlignment.MiddleLeft,
                 TextImageRelation = TextImageRelation.ImageBeforeText
@@ -221,19 +226,41 @@ namespace BDPCompressEncrypt
 
             tablaProcesos = new DataGridView()
             {
-                Dock = DockStyle.Fill, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                AllowUserToAddRows = false, RowHeadersVisible = false, SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                BackgroundColor = Color.White, BorderStyle = BorderStyle.None, ReadOnly = true
+                Dock = DockStyle.Fill,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                AllowUserToAddRows = false, 
+                RowHeadersVisible = false, 
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                BackgroundColor = Color.White, 
+                BorderStyle = BorderStyle.None, 
+                ReadOnly = true
             };
+
+            // 🔥 Personalización de los Encabezados (Headers)
+            tablaProcesos.EnableHeadersVisualStyles = false; // IMPORTANTE: Desactiva el estilo visual por defecto de Windows para permitir colores personalizados
+            tablaProcesos.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(14, 54, 90); // Color de fondo del header
+            tablaProcesos.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;         // Color del texto del header
+            tablaProcesos.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 8, FontStyle.Bold); // Estilo de fuente
+            /* tablaProcesos.ColumnHeadersHeight = 35; // Altura opcional para que respire mejor el header */
 
             tablaProcesos.Columns.Add("NombreDB", "Base de Datos");
             tablaProcesos.Columns.Add("Hora", "Hora");
             tablaProcesos.Columns.Add("Estado", "Estado");
 
-            DataGridViewButtonColumn btnVer = new DataGridViewButtonColumn() { HeaderText = "Config", Text = "👀 Editar", UseColumnTextForButtonValue = true };
+            DataGridViewButtonColumn btnVer = new DataGridViewButtonColumn() { 
+                HeaderText = "Config", 
+                Text = " Editar", 
+                UseColumnTextForButtonValue = true,
+                /* BackColor = Color.Yellow  */
+            };
             tablaProcesos.Columns.Add(btnVer);
 
-            DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn() { HeaderText = "Borrar", Text = "🗑️", UseColumnTextForButtonValue = true };
+            DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn() { 
+                HeaderText = "Borrar", 
+                Text = "Eliminar", 
+                UseColumnTextForButtonValue = true,  
+                /* BackColor = Color.Red */
+            };
             tablaProcesos.Columns.Add(btnEliminar);
 
             tablaProcesos.CellClick += TablaProcesos_CellClick;
@@ -279,6 +306,7 @@ namespace BDPCompressEncrypt
                     txtDatabase.Text = alarma.BaseDatos;
                     txtUser.Text = alarma.Usuario;
                     txtRouteDestination.Text = alarma.Ruta;
+
                     DateTimePickerHour.Value = alarma.Hora;
 
                     for (int i = 0; i < 7; i++)
@@ -325,6 +353,7 @@ namespace BDPCompressEncrypt
                 Size = new Size(100, 28), 
                 ForeColor = Color.White,
                 BackColor = Color.FromArgb(14, 54, 90),
+                Font = new Font("Segoe UI", 8, FontStyle.Bold), // Estilo de fuente
                 FlatStyle = FlatStyle.Flat,
                 Image = new Bitmap(Image.FromFile("ArrowBack.png"), new Size(20, 20)),
                 ImageAlign = ContentAlignment.MiddleLeft,
@@ -338,37 +367,73 @@ namespace BDPCompressEncrypt
             btnVolver.Click += (s, e) => CerrarPestañaConfiguracion();
             tab.Controls.Add(btnVolver);
 
-            AgregarLabel(tab, "Servidor:", 20, 15);
-            txtServer = new TextBox() { Location = new Point(20, 35), Width = 240, PlaceholderText = "Ip del servidor" };
+            AgregarLabel(tab, "Servidor:", 20, 35);
+            txtServer = new TextBox() { 
+                Location = new Point(20, 55), 
+                Width = 240, 
+                PlaceholderText = "Ip del servidor",
+                ForeColor = Color.FromArgb(14, 54, 90)
+            };
 
-            AgregarLabel(tab, "Base de Datos:", 280, 15);
-            txtDatabase = new TextBox() { Location = new Point(280, 35), Width = 240, PlaceholderText = "Nombre de la base de datos" };
+            AgregarLabel(tab, "Base de Datos:", 280, 35);
+            txtDatabase = new TextBox() { 
+                Location = new Point(280, 55), 
+                Width = 240, 
+                PlaceholderText = "Nombre de la base de datos",
+                ForeColor = Color.FromArgb(14, 54, 90) 
+                };
 
-            AgregarLabel(tab, "Usuario SQL Server:", 20, 65);
-            txtUser = new TextBox() { Location = new Point(20, 85), Width = 240, PlaceholderText = "Dejar vacío para Windows Auth" };
+            AgregarLabel(tab, "Usuario SQL Server:", 20, 85);
+            txtUser = new TextBox() { 
+                Location = new Point(20, 105), 
+                Width = 240, 
+                PlaceholderText = "Usuario de base de datos", 
+                ForeColor = Color.FromArgb(14, 54, 90)
+            };
 
-            AgregarLabel(tab, "Contraseña SQL Server:", 280, 65);
-            txtPassword = new TextBox() { Location = new Point(280, 85), Width = 240, PasswordChar = '•', PlaceholderText = "Clave" };
+            AgregarLabel(tab, "Contraseña SQL Server:", 280, 85);
+            txtPassword = new TextBox() { 
+                Location = new Point(280, 105), 
+                Width = 240, 
+                PasswordChar = '•', 
+                PlaceholderText = "Clave",
+                ForeColor = Color.FromArgb(14, 54, 90)
+            };
             btnShowSqlKey = CrearBotonOjo(txtPassword, btnShowSqlKey_Click);
 
-            AgregarLabel(tab, "Ruta Destino de Respaldo:", 20, 125);
-            txtRouteDestination = new TextBox() { Location = new Point(20, 145), Width = 340, PlaceholderText = "Ruta de destino donde se guardará el backup" };
+            AgregarLabel(tab, "Ruta Destino de Respaldo:", 20, 135);
+            txtRouteDestination = new TextBox() {  
+                Width = 340, 
+                PlaceholderText = "Ruta de destino donde se guardará el backup",
+                Location = new Point(20, 157), // Bajado 2px para alinear perfectamente con el texto del botón de al lado
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular), // Tipografía moderna, hace que la caja crezca sola a unos 25px de alto
+                BorderStyle = BorderStyle.FixedSingle, // Borde más limpio y plano, sin relieve antiguo de Windows
+                ForeColor = Color.FromArgb(14, 54, 90) // Color de texto azul corporativo cuando el usuario escribe 
+            };
             btnExaminarDestino = new Button() { 
                 Text = "Examinar", 
                 BackColor = Color.FromArgb(14, 54, 90),
                 ForeColor = Color.White,
-                Location = new Point(380, 144), 
+                Font = new Font("Segoe UI", 8, FontStyle.Bold), // Estilo de fuente
+                Location = new Point(380, 155), 
                 Size = new Size(140, 28), // Un poco más de altura (28) para darle respiro al icono
                 Image = new Bitmap(Image.FromFile("OpenFolder.png"), new Size(18, 18)), // Tamaño ligeramente más cómodo
                 ImageAlign = ContentAlignment.MiddleLeft,     // Fuerza al icono a la izquierda
                 TextAlign = ContentAlignment.MiddleRight,     // Centra el texto alineado al icono
                 TextImageRelation = TextImageRelation.ImageBeforeText, // Mantiene icono y texto en orden
-                Padding = new Padding(2, 0, 0, 0) 
+                Padding = new Padding(2, 0, 0, 0),
+                FlatStyle = FlatStyle.Flat 
             };
             btnExaminarDestino.Click += BtnExaminarDestino_Click;
 
-            AgregarLabel(tab, "Clave de cifrado AES-256:", 20, 175);
-            txtEncryptionKey = new TextBox() { Location = new Point(20, 195), Width = 500, PasswordChar = '•', PlaceholderText = "Clave de cifrado AES-256" };
+            AgregarLabel(tab, "Clave de cifrado AES-256:", 20, 185);
+            txtEncryptionKey = new TextBox() { 
+                Location = new Point(20, 205), 
+                Width = 500, 
+                PasswordChar = '•', 
+                PlaceholderText = "Clave de cifrado AES-256",
+                ForeColor = Color.FromArgb(14, 54, 90) 
+            };
             btnShowEncryptionKey = CrearBotonOjo(txtEncryptionKey, btnShowEncryptionKey_Click);
 
             AgregarLabel(tab, "Hora de ejecución:", 20, 235);
@@ -385,11 +450,14 @@ namespace BDPCompressEncrypt
                 Location = new Point(20, 370), 
                 Size = new Size(295, 45), 
                 BackColor = Color.FromArgb(14, 54, 90),
-                ForeColor = Color.White, Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = Color.White, 
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+
                 Image = new Bitmap(Image.FromFile("Key.png"), new Size(20, 20)),
                 ImageAlign = ContentAlignment.MiddleLeft,
-                TextAlign = ContentAlignment.MiddleRight,
-                TextImageRelation = TextImageRelation.ImageBeforeText
+                TextAlign = ContentAlignment.MiddleCenter,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat
             };
             btnSaveConfig.Click += btnSaveConfig_Click;
 
@@ -635,18 +703,26 @@ namespace BDPCompressEncrypt
         private void ConstruirPestañaDescifrado(TabPage tab)
         {
             AgregarLabel(tab, "Archivo Cifrado (.enc):", 20, 20);
-            txtArchivoEnc = new TextBox() { Location = new Point(20, 40), Width = 340 };
+            txtArchivoEnc = new TextBox() {
+                Width = 340,
+                Location = new Point(20, 42), // Bajado 2px para alinear perfectamente con el texto del botón de al lado
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular), // Tipografía moderna, hace que la caja crezca sola a unos 25px de alto
+                BorderStyle = BorderStyle.FixedSingle, // Borde más limpio y plano, sin relieve antiguo de Windows
+                ForeColor = Color.FromArgb(14, 54, 90) // Color de texto azul corporativo cuando el usuario escribe 
+            };
             btnExaminarEnc = new Button() { 
                 Text = "Examinar", 
                 Location = new Point(380, 39), 
                 BackColor = Color.FromArgb(14, 54, 90),
                 ForeColor= Color.White,
+                Font = new Font("Segoe UI", 8, FontStyle.Bold), // Estilo de fuente
                 Size = new Size(140, 28), // Un poco más de altura (28) para darle respiro al icono
                 Image = new Bitmap(Image.FromFile("OpenFolder.png"), new Size(18, 18)), // Tamaño ligeramente más cómodo
                 ImageAlign = ContentAlignment.MiddleLeft,     // Fuerza al icono a la izquierda
                 TextAlign = ContentAlignment.MiddleRight,     // Centra el texto alineado al icono
                 TextImageRelation = TextImageRelation.ImageBeforeText, // Mantiene icono y texto en orden
-                Padding = new Padding(2, 0, 0, 0)
+                Padding = new Padding(2, 0, 0, 0),
+                FlatStyle = FlatStyle.Flat
             };
             btnExaminarEnc.Click += BtnExaminarEnc_Click;
 
@@ -667,23 +743,38 @@ namespace BDPCompressEncrypt
             lblDrag.DragDrop += PanelDragDrop_DragDrop;
 
             AgregarLabel(tab, "Ruta de Destino (Carpeta de salida):", 20, 175);
-            txtRutaSalidaDescifrado = new TextBox() { Location = new Point(20, 195), Width = 340, Text = @"C:\Backups\Restaurados" };
+            txtRutaSalidaDescifrado = new TextBox() {
+                Width = 340, 
+                PlaceholderText = "",
+                Location = new Point(20, 197), // Bajado 2px para alinear perfectamente con el texto del botón de al lado
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular), // Tipografía moderna, hace que la caja crezca sola a unos 25px de alto
+                BorderStyle = BorderStyle.FixedSingle, // Borde más limpio y plano, sin relieve antiguo de Windows
+                ForeColor = Color.FromArgb(14, 54, 90) // Color de texto azul corporativo cuando el usuario escribe
+            };
             btnExaminarSalida = new Button() { 
                 Text = "Examinar", 
                 Location = new Point(380, 194), 
                 BackColor = Color.FromArgb(14, 54, 90),
                 ForeColor = Color.White,
+                Font = new Font("Segoe UI", 8, FontStyle.Bold), // Estilo de fuente
                 Size = new Size(140, 28), // Un poco más de altura (28) para darle respiro al icono
                 Image = new Bitmap(Image.FromFile("OpenFolder.png"), new Size(18, 18)), // Tamaño ligeramente más cómodo
                 ImageAlign = ContentAlignment.MiddleLeft,     // Fuerza al icono a la izquierda
                 TextAlign = ContentAlignment.MiddleRight,     // Centra el texto alineado al icono
                 TextImageRelation = TextImageRelation.ImageBeforeText, // Mantiene icono y texto en orden
-                Padding = new Padding(2, 0, 0, 0) 
+                Padding = new Padding(2, 0, 0, 0),
+                FlatStyle = FlatStyle.Flat
                 };
             btnExaminarSalida.Click += BtnExaminarSalida_Click;
 
             AgregarLabel(tab, "Contraseña AES-256 de Cifrado:", 20, 235);
-            txtPasswordDescifrado = new TextBox() { Location = new Point(20, 255), Width = 500, PasswordChar = '•', Text = "" };
+            txtPasswordDescifrado = new TextBox() { 
+                Location = new Point(20, 255), 
+                Width = 500, 
+                PasswordChar = '•', 
+                Text = "",
+                ForeColor = Color.FromArgb(14, 54, 90),
+            };
             btnVerClaveDescifrar = CrearBotonOjo(txtPasswordDescifrado, BtnVerClaveDescifrar_Click);
 
             btnIniciarDescifrado = new Button() { 
@@ -696,7 +787,8 @@ namespace BDPCompressEncrypt
                 Image = new Bitmap(Image.FromFile("KeyOff.png"), new Size(20, 20)),
                 ImageAlign = ContentAlignment.MiddleLeft,
                 TextAlign = ContentAlignment.MiddleCenter, // Centra el texto junto al icono
-                TextImageRelation = TextImageRelation.ImageBeforeText 
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat
             };
             btnIniciarDescifrado.Click += BtnIniciarDescifrado_Click;
 

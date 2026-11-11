@@ -66,3 +66,7 @@ sqlcmd -S localhost -E -C -Q "RESTORE DATABASE [MORA_INTEGGRE20260801_21-00] FRO
 ```sh
 git -c http.sslVerify=false push origin main
 ```
+
+```sh
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+```
